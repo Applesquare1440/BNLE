@@ -7,7 +7,7 @@ from vision.tracker import TrackerWrapper
 from control.controller import Controller
 from control.servo_driver import ServoDriver
 from behavior.state_machine import StateMachine
-from config import FRAME_WIDTH, DETECTION_INTERVAL
+from config import FRAME_WIDTH, FRAME_HEIGHT, DETECTION_INTERVAL
 
 
 def main():
@@ -21,7 +21,7 @@ def main():
     fps = 0
     frame_counter = 0
     fps_timer = time.time()
-    
+
     frame_id = 0
     bbox = None
 
@@ -30,6 +30,9 @@ def main():
             frame = cam.get_frame()
             if frame is None:
                 continue
+
+            #DEBUG
+            cv2.line(frame, (FRAME_WIDTH // 2, 0), (FRAME_WIDTH // 2, FRAME_HEIGHT), (0, 255, 255), 1)
 
             detections = []
 
@@ -60,6 +63,10 @@ def main():
                 target_x = x + w // 2
                 angle = controller.update(target_x, current_angle)
 
+                #DEBUG
+                cv2.circle(frame, (target_x, FRAME_HEIGHT//2), 4, (0,0,255), -1)
+                print(f"Angle: {angle:.2f}")
+
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
             else:
@@ -67,19 +74,26 @@ def main():
 
             servo.set_angle(angle)
 
+            #DEBUG
+            print(f"Angle: {angle:.2f}")
+
             # ===== DEBUG OVERLAY =====
             info1 = f"FPS: {fps}"
             info2 = f"Mode: {mode}"
             info3 = f"Detections: {len(detections)}"
+            info4 = f"Angle: {angle:.2f}"
 
             cv2.putText(frame, info1, (10, 20),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
             cv2.putText(frame, info2, (10, 40),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
             cv2.putText(frame, info3, (10, 60),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+
+            cv2.putText(frame, info4, (10, 80),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
             cv2.imshow("frame", frame)
             if cv2.waitKey(1) == 27:
@@ -90,13 +104,12 @@ def main():
                 fps = frame_counter
                 frame_counter = 0
                 fps_timer = time.time()
-                
+
             frame_id += 1
 
-    finally:
+        finally:
         cam.stop()
         cv2.destroyAllWindows()
 
-
-if __name__ == "__main__":
-    main()
+    if __name__ == "__main__":
+        main()

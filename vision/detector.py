@@ -29,36 +29,31 @@ class YOLODetector:
 
         boxes = []
         confidences = []
-        
-        x_factor = w / 640
-        y_factor = h / 640
-
-        #outputs = self.net.forward()[0]
-
-        """for det in outputs:
-            scores = det[4:]"""
+        results = []
 
         for row in outputs:
             # YOLOv8: first 4 = bbox, rest = class scores
-            #cx, cy, bw, bh = row[:4]
+            cx, cy, bw, bh = row[:4]
             scores = row[4:]
+
             class_id = np.argmax(scores)
             confidence = scores[class_id]
 
             if class_id != 0 or confidence < CONF_THRESHOLD:
                 continue
-            cx, cy, bw, bh = row[:4]
+
             print("RAW:", cx, cy, bw, bh)
 
             # Convert to pixel coords
-            x = int((cx - bw / 2) * x_factor)
-            y = int((cy - bh / 2) * y_factor)
-            bw = int(bw * x_factor)
-            bh = int(bh * y_factor)
+            x = int((cx - bw / 2) * (w/640))
+            y = int((cy - bh / 2) * (h/640))
+            bw = int(bw * (w/640))
+            bh = int(bh * (h/640))
             
             print("Converted:", cx, cy, bw, bh)
-            
-            boxes.append([x, y, bw, bh])
+
+            results.append([x, y, bw, bh])
+            """boxes.append([x, y, bw, bh])
             confidences.append(float(confidence))
 
         indices = cv2.dnn.NMSBoxes(boxes, confidences, CONF_THRESHOLD, NMS_THRESHOLD)
@@ -67,6 +62,6 @@ class YOLODetector:
         
         if len(indices) > 0:
             for i in indices.flatten():
-                results.append(boxes[i])
+                results.append(boxes[i])"""
 
         return results

@@ -13,8 +13,8 @@ NMS_THRESHOLD = 0.45
 USE_CSRT_FALLBACK = True
 
 # ===== CONTROL =====
-CP = 0.6
-MAX_STEP = 2.0  # degrees per frame
+CP = 30
+MAX_STEP = 80.0  # degrees per frame
 DEAD_ZONE = 0.05  # 5%
 
 SMOOTHING_ALPHA = 0.85
@@ -23,6 +23,7 @@ SERVO_MIN = 0
 SERVO_MAX = 180
 SERVO_CENTER = 90
 
+GEAR_RATIO = 4.0
 # ===== BEHAVIOR =====
 TARGET_LOCK_TIME = 5.0
 HOLD_TIME = 0.5
