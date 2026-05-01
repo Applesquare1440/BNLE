@@ -1,0 +1,103 @@
+
+Current instructions to install and setup:
+1. Install OS
+2. Power off
+3. Connect everything in hardware
+4. Install and setup of software and firmware
+4.1 sudo raspi-config # enable I2C - for servo part
+4.2 sudo i2cdetect -y 1 - detect hat adress - default 0x40 - servo part
+4.3 sudo nano /boot/firmware/config.txt #add following code there: - for camera part
+
+# Automatically load overlays for detected cameras
+camera_auto_detect=0
+dtoverlay=imx219
+
+4.5 sudo apt install bpytop --performance monitor for remote work
+4.6 reboot
+
+5 Create environment
+# RPi setup:
+5.0 install system-wide packages:
+sudo apt update
+sudo apt install python3-opencv libatlas-base-dev
+sudo apt install python3-picamera2 python3-libcamera
+sudo apt install python3-numpy
+
+5 Create environment
+5.1 cd ~/Documents
+5.2 mkdir tracking_project
+5.3 cd ~/Documents/tracking_project
+5.4 python3 -m venv venv  --system-site-packages
+5.5 source venv/bin/activate
+
+# Structure:
+
+tracking_project/
+│
+├── main.py
+├── config.py
+│
+├── camera/
+│   └── picamera_stream.py
+│
+├── vision/
+│   ├── detector.py
+│   ├── tracker.py
+│   └── target_selector.py
+│
+├── control/
+│   ├── controller.py
+│   └── servo_driver.py
+│
+├── behavior/
+│   └── state_machine.py
+│
+└── models/
+    └── yolov8n.onnx
+
+5.6 Create directories:
+cd ~/Documents/tracking_project
+mkdir -p camera vision control behavior models
+
+5.7 install required packages:
+
+pip install adafruit-circuitpython-servokit
+pip install opencv-python
+pip install opencv-contrib-python
+
+
+5.8 Install ultralytics onnx and export it - once, on x64 machine
+pip install ultralytics
+pip install onnx
+yolo export model=yolov8n.pt format=onnx opset=12
+
+place in models folder:
+tracking_project/models/yolov8n.onnx
+
+
+5.9 Insert code:
+
+cd ~/Documents/tracking_project
+
+nano config.py
+
+nano control/servo_driver.py
+
+nano camera/picamera_stream.py
+
+nano vision/detector.py
+
+nano vision/tracker.py
+
+nano control/controller.py
+
+nano behavior/state_machine.py
+
+nano vision/target_selector.py
+
+nano main.py
+
+
+6.0 After files and models are in place:
+
+python main.py
