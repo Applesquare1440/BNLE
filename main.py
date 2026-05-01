@@ -21,7 +21,7 @@ def main():
     fps = 0
     frame_counter = 0
     fps_timer = time.time()
-
+    
     frame_id = 0
     bbox = None
 
@@ -65,16 +65,15 @@ def main():
 
                 #DEBUG
                 cv2.circle(frame, (target_x, FRAME_HEIGHT//2), 4, (0,0,255), -1)
-                print(f"Angle: {angle:.2f}")
 
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
             else:
                 angle = current_angle
-
+            
             servo.set_angle(angle)
-
-            #DEBUG
+            
+            #DEBUG  
             print(f"Angle: {angle:.2f}")
 
             # ===== DEBUG OVERLAY =====
@@ -84,16 +83,16 @@ def main():
             info4 = f"Angle: {angle:.2f}"
 
             cv2.putText(frame, info1, (10, 20),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
             cv2.putText(frame, info2, (10, 40),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
             cv2.putText(frame, info3, (10, 60),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
-
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                
             cv2.putText(frame, info4, (10, 80),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
             cv2.imshow("frame", frame)
             if cv2.waitKey(1) == 27:
@@ -104,12 +103,12 @@ def main():
                 fps = frame_counter
                 frame_counter = 0
                 fps_timer = time.time()
-
+                
             frame_id += 1
 
-        finally:
+    finally:
         cam.stop()
         cv2.destroyAllWindows()
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()
