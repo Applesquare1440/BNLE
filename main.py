@@ -1,6 +1,7 @@
 import time
 import cv2
 
+from vision.target_selector import TargetSelector
 from camera.picamera_stream import CameraStream
 from vision.detector import YOLODetector
 from vision.tracker import TrackerWrapper
@@ -17,6 +18,7 @@ def main():
     servo = ServoDriver()
     controller = Controller(FRAME_WIDTH)
     state = StateMachine()
+    selector = TargetSelector(FRAME_WIDTH)
 
     fps = 0
     frame_counter = 0
@@ -43,12 +45,24 @@ def main():
                 for (x, y, w, h) in detections:
                     cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
-                if detections:
-                    bbox = detections[0]
+                selector.update_targets(detections)
+
+                selected_bbox = selector.select_target()
+
+                if selected_bbox is not None:
+                    bbox = selected_bbox
                     tracker.init(frame, bbox)
 
             # Tracking step
             success, tracked_box = tracker.update(frame)
+            if not success:
+                # try to reacquire from selector
+                selected_bbox = selector.select_target()
+                if selected_bbox is not None:
+                    tracker.init(frame, selected_bbox)
+                    success = True
+                    tracked_box = selected_bbox
+
             target_visible = success
 
             mode = state.update(detections, target_visible)
