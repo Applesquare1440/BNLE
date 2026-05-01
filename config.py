@@ -14,7 +14,7 @@ USE_CSRT_FALLBACK = True
 
 # ===== CONTROL =====
 CP = 30
-MAX_STEP = 80.0  # degrees per frame
+MAX_STEP = 120.0  # degrees per frame
 DEAD_ZONE = 0.05  # 5%
 
 SMOOTHING_ALPHA = 0.85
