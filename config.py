@@ -30,7 +30,7 @@ HOLD_TIME = 0.5
 LOST_TIMEOUT = 2.0
 
 # ===== IDLE SCAN =====
-SCAN_SPEED = 0.5  # deg/frame
+SCAN_SPEED = 0.25  # deg/frame
 SCAN_MIN = 50
 SCAN_MAX = 130
 
