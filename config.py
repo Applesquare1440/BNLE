@@ -1,7 +1,7 @@
 # ===== CAMERA =====
 FRAME_WIDTH = 320
 FRAME_HEIGHT = 240
-FPS_TARGET = 12
+FPS_TARGET = 10
 
 # ===== DETECTION =====
 MODEL_PATH = "models/yolov8n.onnx"
@@ -17,7 +17,7 @@ CP = 30
 MAX_STEP = 120.0  # degrees per frame
 DEAD_ZONE = 0.05  # 5%
 
-SMOOTHING_ALPHA = 0.85
+SMOOTHING_ALPHA = 0.85 #lower smoothing with Cp
 
 SERVO_MIN = 0
 SERVO_MAX = 180
@@ -31,8 +31,8 @@ LOST_TIMEOUT = 2.0
 
 # ===== IDLE SCAN =====
 SCAN_SPEED = 0.5  # deg/frame
-SCAN_MIN = 60
-SCAN_MAX = 120
+SCAN_MIN = 50
+SCAN_MAX = 130
 
 # ===== TARGET SELECTION =====
 W_RECENCY = 2.0

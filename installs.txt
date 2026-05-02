@@ -19,7 +19,8 @@ dtoverlay=imx219
 # RPi setup:
 5.0 install system-wide packages:
 sudo apt update
-sudo apt install python3-opencv libatlas-base-dev
+sudo apt install python3-opencv
+sudo apt install libatlas-base-dev # for 13+ os: sudo apt install libopenblas-dev liblapack-dev
 sudo apt install python3-picamera2 python3-libcamera
 sudo apt install python3-numpy
 
@@ -64,6 +65,7 @@ mkdir -p camera vision control behavior models
 pip install adafruit-circuitpython-servokit
 pip install opencv-python
 pip install opencv-contrib-python
+
 
 
 5.8 Install ultralytics onnx and export it - once, on x64 machine

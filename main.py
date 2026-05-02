@@ -8,7 +8,7 @@ from vision.tracker import TrackerWrapper
 from control.controller import Controller
 from control.servo_driver import ServoDriver
 from behavior.state_machine import StateMachine
-from config import FRAME_WIDTH, FRAME_HEIGHT, DETECTION_INTERVAL
+from config import FRAME_WIDTH, FRAME_HEIGHT, DETECTION_INTERVAL, LOST_TIMEOUT
 
 
 def main():
@@ -20,6 +20,7 @@ def main():
     state = StateMachine()
     selector = TargetSelector(FRAME_WIDTH)
 
+    last_detection_time = 0
     fps = 0
     frame_counter = 0
     fps_timer = time.time()
@@ -52,6 +53,13 @@ def main():
                 if selected_bbox is not None:
                     bbox = selected_bbox
                     tracker.init(frame, bbox)
+                    last_detection_time = time.time()
+
+            if len(detections) == 0:
+                # no confirmation this frame
+                pass
+            else:
+                last_detection_time = time.time()
 
             # Tracking step
             success, tracked_box = tracker.update(frame)
@@ -62,6 +70,12 @@ def main():
                     tracker.init(frame, selected_bbox)
                     success = True
                     tracked_box = selected_bbox
+
+            # Invalidate tracker if too old
+            if time.time() - last_detection_time > LOST_TIMEOUT:
+                tracker.tracker = None
+                success = False
+
 
             target_visible = success
 
