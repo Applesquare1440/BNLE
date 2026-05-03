@@ -102,7 +102,7 @@ nano vision/target_selector.py
 
 nano main.py
 
-
+6.0 Create systemd service
 
 6.0 After files and models are in place:
 
