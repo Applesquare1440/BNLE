@@ -4,10 +4,10 @@ ACTIVE_DAYS = [1, 2, 3, 4, 5, 6]  # Tuesday–Sunday
 
 # Time window (24h format)
 START_HOUR = 9
-START_MINUTE = 0
+START_MINUTE = 30
 
 END_HOUR = 19
-END_MINUTE = 0
+END_MINUTE = 30
 
 # Behavior outside schedule
 PARK_ANGLE = 90          # neutral safe position
@@ -29,11 +29,11 @@ NMS_THRESHOLD = 0.45
 USE_CSRT_FALLBACK = True
 
 # ===== CONTROL =====
-CP = 30
-MAX_STEP = 120.0  # degrees per frame
+CP = 6
+MAX_STEP = 100.0  # degrees per frame
 DEAD_ZONE = 0.05  # 5%
 
-SMOOTHING_ALPHA = 0.85 #lower smoothing with Cp
+SMOOTHING_ALPHA = 0.2 #lower smoothing with Cp
 
 SERVO_MIN = 0
 SERVO_MAX = 180

@@ -21,21 +21,23 @@ class Scheduler:
         if now.weekday() not in ACTIVE_DAYS:
             return False
 
-        start = now.replace(
-            hour=START_HOUR,
-            minute=START_MINUTE,
-            second=0,
-            microsecond=0,
-        )
+        now_time = now.time()
 
-        end = now.replace(
-            hour=END_HOUR,
-            minute=END_MINUTE,
-            second=0,
-            microsecond=0,
-        )
+        start_time = datetime.time(hour=START_HOUR, minute=START_MINUTE)
 
-        return start <= now <= end
+        end_time = datetime.time(hour=END_HOUR, minute=END_MINUTE)
+
+        # CASE 1: same-day window
+
+        if start_time < end_time:
+
+            return start_time <= now_time <= end_time
+
+        # CASE 2: overnight window
+
+        else:
+
+            return now_time >= start_time or now_time <= end_time
 
     def wait_until_active(self, sleep_interval):
         while not self.is_active():
