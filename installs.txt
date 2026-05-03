@@ -102,8 +102,32 @@ nano vision/target_selector.py
 
 nano main.py
 
-6.0 Create systemd service
+6.0 Get absolute paths
+which python
 
-6.0 After files and models are in place:
+#example result
+/home/pi/Documents/tracking_project/venv/bin/python
+
+6.1 Create systemd service
+sudo nano /etc/systemd/system/tracking.service
+
+6.2 Enable service
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable tracking.service
+sudo systemctl start tracking.service
+
+6.3 Check status
+sudo systemctl status tracking.service
+
+6.4 Logs checking:
+journalctl -u tracking.service -f
+
+6.5 Create automatic reboot
+sudo nano /etc/crontab
+6.6 Write:
+0  0     * * *   root    reboot
+
+7.0 After files and models are in place:
 
 python main.py
