@@ -1,3 +1,19 @@
+# ===== SCHEDULER =====
+# Active days (0=Monday, 6=Sunday)
+ACTIVE_DAYS = [1, 2, 3, 4, 5, 6]  # Tuesday–Sunday
+
+# Time window (24h format)
+START_HOUR = 9
+START_MINUTE = 0
+
+END_HOUR = 19
+END_MINUTE = 0
+
+# Behavior outside schedule
+PARK_ANGLE = 90          # neutral safe position
+SLEEP_INTERVAL = 10       # seconds between checks when inactive
+
+
 # ===== CAMERA =====
 FRAME_WIDTH = 320
 FRAME_HEIGHT = 240

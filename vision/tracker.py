@@ -1,4 +1,5 @@
 import cv2
+from config import LOST_TIMEOUT
 
 
 class TrackerWrapper:

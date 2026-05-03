@@ -9,7 +9,8 @@ from control.controller import Controller
 from control.servo_driver import ServoDriver
 from behavior.state_machine import StateMachine
 from config import FRAME_WIDTH, FRAME_HEIGHT, DETECTION_INTERVAL, LOST_TIMEOUT
-
+from control.scheduler import Scheduler
+from config import PARK_ANGLE, SLEEP_INTERVAL
 
 def main():
     cam = CameraStream()
@@ -19,6 +20,7 @@ def main():
     controller = Controller(FRAME_WIDTH)
     state = StateMachine()
     selector = TargetSelector(FRAME_WIDTH)
+    scheduler = Scheduler()
 
     last_detection_time = 0
     fps = 0
@@ -30,11 +32,20 @@ def main():
 
     try:
         while True:
+
+            # ===== SCHEDULER =====
+            if not scheduler.is_active():
+                servo.set_angle(PARK_ANGLE)
+                time.sleep(SLEEP_INTERVAL)
+                continue
+
+            time.sleep(1.0)
+
             frame = cam.get_frame()
             if frame is None:
                 continue
 
-            #DEBUG
+            #DEBUG - vertical aim line
             cv2.line(frame, (FRAME_WIDTH // 2, 0), (FRAME_WIDTH // 2, FRAME_HEIGHT), (0, 255, 255), 1)
 
             detections = []
