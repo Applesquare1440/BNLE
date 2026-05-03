@@ -10,7 +10,7 @@ from control.servo_driver import ServoDriver
 from behavior.state_machine import StateMachine
 from config import FRAME_WIDTH, FRAME_HEIGHT, DETECTION_INTERVAL, LOST_TIMEOUT
 from control.scheduler import Scheduler
-from config import PARK_ANGLE, SLEEP_INTERVAL
+from config import PARK_ANGLE, SLEEP_INTERVAL, ENABLE_DISPLAY
 
 def main():
     cam = CameraStream()
@@ -131,9 +131,13 @@ def main():
             cv2.putText(frame, info4, (10, 80),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
-            cv2.imshow("frame", frame)
-            if cv2.waitKey(1) == 27:
-                break
+            from config import ENABLE_DISPLAY
+
+            if ENABLE_DISPLAY:
+                cv2.imshow("frame", frame)
+                if cv2.waitKey(1) == 27:
+                    break
+
             frame_counter += 1
 
             if time.time() - fps_timer >= 1.0:
@@ -145,7 +149,8 @@ def main():
 
     finally:
         cam.stop()
-        cv2.destroyAllWindows()
+        if ENABLE_DISPLAY:
+            cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()

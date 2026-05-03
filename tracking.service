@@ -2,7 +2,8 @@
 Description=Tracking Project
 After=network.target
 
-[Service] # replace user everywhere with actual username
+# replace user everywhere with actual username
+[Service]
 User=pi
 WorkingDirectory=/home/pi/Documents/tracking_project
 ExecStart=/home/pi/Documents/tracking_project/venv/bin/python main.py

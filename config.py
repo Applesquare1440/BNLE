@@ -1,3 +1,6 @@
+# ===== DEBUG / DISPLAY =====
+ENABLE_DISPLAY = False
+
 # ===== SCHEDULER =====
 # Active days (0=Monday, 6=Sunday)
 ACTIVE_DAYS = [1, 2, 3, 4, 5, 6]  # Tuesday–Sunday
