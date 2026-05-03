@@ -39,8 +39,6 @@ def main():
                 time.sleep(SLEEP_INTERVAL)
                 continue
 
-            time.sleep(1.0)
-
             frame = cam.get_frame()
             if frame is None:
                 continue
