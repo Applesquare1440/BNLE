@@ -48,6 +48,7 @@ tracking_project/
 │
 ├── control/
 │   ├── controller.py
+│   ├── scheduler.py
 │   └── servo_driver.py
 │
 ├── behavior/
@@ -93,11 +94,14 @@ nano vision/tracker.py
 
 nano control/controller.py
 
+nano control/scheduler.py
+
 nano behavior/state_machine.py
 
 nano vision/target_selector.py
 
 nano main.py
+
 
 
 6.0 After files and models are in place:
