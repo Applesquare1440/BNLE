@@ -53,15 +53,5 @@ class YOLODetector:
             print("Converted:", cx, cy, bw, bh)
 
             results.append([x, y, bw, bh])
-            """boxes.append([x, y, bw, bh])
-            confidences.append(float(confidence))
-
-        indices = cv2.dnn.NMSBoxes(boxes, confidences, CONF_THRESHOLD, NMS_THRESHOLD)
-
-        results = []
-        
-        if len(indices) > 0:
-            for i in indices.flatten():
-                results.append(boxes[i])"""
 
         return results
