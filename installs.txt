@@ -129,6 +129,11 @@ sudo nano /etc/crontab
 6.6 Write:
 0  0     * * *   root    reboot
 
-7.0 After files and models are in place:
+7.0 After files or models updated:
 
+sudo systemctl restart tracking.service
+
+8.0 manual power up (if service rund, do not create duplicates! instead in config change display preview and restart service!
 python main.py
+
+
