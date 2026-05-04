@@ -1,0 +1,24 @@
+[Unit]
+Description=Tracking Project
+After=network.target
+
+# replace user everywhere with actual username
+[Service]
+User=pi
+WorkingDirectory=/home/pi/Documents/tracking_project
+ExecStart=/home/pi/Documents/tracking_project/venv/bin/python main.py
+
+Restart=always
+RestartSec=5
+StartLimitBurst=3
+StartLimitIntervalSec=60
+
+# Prevent runaway CPU issues
+Nice=10
+
+# Optional logging
+StandardOutput=inherit
+StandardError=inherit
+
+[Install]
+WantedBy=multi-user.target

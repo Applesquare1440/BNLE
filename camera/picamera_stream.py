@@ -21,7 +21,8 @@ class CameraStream:
             raw={
                 "size": (1640, 1232)  # FULL SENSOR for IMX219
             },
-            transform=Transform(hflip=1, vflip=1)
+            transform=Transform(hflip=1, vflip=1),
+            buffer_count=2
         )
 
         self.picam2.configure(config)

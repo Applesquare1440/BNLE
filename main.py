@@ -1,14 +1,16 @@
 import time
 import cv2
 
+from vision.target_selector import TargetSelector
 from camera.picamera_stream import CameraStream
 from vision.detector import YOLODetector
 from vision.tracker import TrackerWrapper
 from control.controller import Controller
 from control.servo_driver import ServoDriver
 from behavior.state_machine import StateMachine
-from config import FRAME_WIDTH, DETECTION_INTERVAL
-
+from config import FRAME_WIDTH, FRAME_HEIGHT, DETECTION_INTERVAL, LOST_TIMEOUT
+from control.scheduler import Scheduler
+from config import PARK_ANGLE, SLEEP_INTERVAL, ENABLE_DISPLAY
 
 def main():
     cam = CameraStream()
@@ -17,7 +19,10 @@ def main():
     servo = ServoDriver()
     controller = Controller(FRAME_WIDTH)
     state = StateMachine()
+    selector = TargetSelector(FRAME_WIDTH)
+    scheduler = Scheduler()
 
+    last_detection_time = 0
     fps = 0
     frame_counter = 0
     fps_timer = time.time()
@@ -27,9 +32,19 @@ def main():
 
     try:
         while True:
+
+            # ===== SCHEDULER =====
+            if not scheduler.is_active():
+                servo.set_angle(PARK_ANGLE)
+                time.sleep(SLEEP_INTERVAL)
+                continue
+
             frame = cam.get_frame()
             if frame is None:
                 continue
+
+            #DEBUG - vertical aim line
+            cv2.line(frame, (FRAME_WIDTH // 2, 0), (FRAME_WIDTH // 2, FRAME_HEIGHT), (0, 255, 255), 1)
 
             detections = []
 
@@ -40,12 +55,37 @@ def main():
                 for (x, y, w, h) in detections:
                     cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
-                if detections:
-                    bbox = detections[0]
+                selector.update_targets(detections)
+
+                selected_bbox = selector.select_target()
+
+                if selected_bbox is not None:
+                    bbox = selected_bbox
                     tracker.init(frame, bbox)
+                    last_detection_time = time.time()
+
+            if len(detections) == 0:
+                # no confirmation this frame
+                pass
+            else:
+                last_detection_time = time.time()
 
             # Tracking step
             success, tracked_box = tracker.update(frame)
+            if not success:
+                # try to reacquire from selector
+                selected_bbox = selector.select_target()
+                if selected_bbox is not None:
+                    tracker.init(frame, selected_bbox)
+                    success = True
+                    tracked_box = selected_bbox
+
+            # Invalidate tracker if too old
+            if time.time() - last_detection_time > LOST_TIMEOUT:
+                tracker.tracker = None
+                success = False
+
+
             target_visible = success
 
             mode = state.update(detections, target_visible)
@@ -60,17 +100,24 @@ def main():
                 target_x = x + w // 2
                 angle = controller.update(target_x, current_angle)
 
+                #DEBUG
+                cv2.circle(frame, (target_x, FRAME_HEIGHT//2), 4, (0,0,255), -1)
+
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
             else:
                 angle = current_angle
-
+            
             servo.set_angle(angle)
+            
+            #DEBUG  
+            print(f"Angle: {angle:.2f}")
 
             # ===== DEBUG OVERLAY =====
             info1 = f"FPS: {fps}"
             info2 = f"Mode: {mode}"
             info3 = f"Detections: {len(detections)}"
+            info4 = f"Angle: {angle:.2f}"
 
             cv2.putText(frame, info1, (10, 20),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
@@ -80,10 +127,17 @@ def main():
 
             cv2.putText(frame, info3, (10, 60),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                
+            cv2.putText(frame, info4, (10, 80),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
-            cv2.imshow("frame", frame)
-            if cv2.waitKey(1) == 27:
-                break
+            from config import ENABLE_DISPLAY
+
+            if ENABLE_DISPLAY:
+                cv2.imshow("frame", frame)
+                if cv2.waitKey(1) == 27:
+                    break
+
             frame_counter += 1
 
             if time.time() - fps_timer >= 1.0:
@@ -95,8 +149,8 @@ def main():
 
     finally:
         cam.stop()
-        cv2.destroyAllWindows()
-
+        if ENABLE_DISPLAY:
+            cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()
