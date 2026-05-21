@@ -14,7 +14,7 @@ END_MINUTE = 30
 
 # Behavior outside schedule
 PARK_ANGLE = 90          # neutral safe position
-SLEEP_INTERVAL = 10       # seconds between checks when inactive
+SLEEP_INTERVAL = 30       # seconds between checks when inactive
 
 
 # ===== CAMERA =====
