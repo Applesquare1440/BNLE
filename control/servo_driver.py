@@ -23,6 +23,7 @@ class ServoDriver:
         angle = self.clamp(angle)
         self.angle = angle
         self.kit.servo[self.channel].angle = angle
+        time.sleep(0.1)
 
     def get_angle(self):
         return self.angle
