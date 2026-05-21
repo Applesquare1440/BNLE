@@ -111,13 +111,15 @@ def main():
             servo.set_angle(angle)
             
             #DEBUG  
-            print(f"Angle: {angle:.2f}")
+            #print(f"Angle: {angle:.2f}")
 
             # ===== DEBUG OVERLAY =====
             info1 = f"FPS: {fps}"
             info2 = f"Mode: {mode}"
             info3 = f"Detections: {len(detections)}"
             info4 = f"Angle: {angle:.2f}"
+            
+            print(info1, info2, info3, info4)
 
             cv2.putText(frame, info1, (10, 20),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
@@ -131,7 +133,6 @@ def main():
             cv2.putText(frame, info4, (10, 80),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
 
-            from config import ENABLE_DISPLAY
 
             if ENABLE_DISPLAY:
                 cv2.imshow("frame", frame)

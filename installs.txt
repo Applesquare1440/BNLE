@@ -135,5 +135,3 @@ sudo systemctl restart tracking.service
 
 8.0 manual power up (if service rund, do not create duplicates! instead in config change display preview and restart service!
 python main.py
-
-

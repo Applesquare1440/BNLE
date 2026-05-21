@@ -33,7 +33,7 @@ USE_CSRT_FALLBACK = True
 
 # ===== CONTROL =====
 CP = 6
-MAX_STEP = 100.0  # degrees per frame
+MAX_STEP = 30.0  # degrees per frame
 DEAD_ZONE = 0.05  # 5%
 
 SMOOTHING_ALPHA = 0.2 #lower smoothing with Cp
